@@ -6,6 +6,10 @@ filename=""
 if ("$#" eq sprintf("%d",1)) filename="$0"
 if (exist("fname")) filename=fname
 
+outfilename="out/histogram.png"
+if ("$#" eq sprintf("%d",2)) outfilename="$1"
+if (exist("oname")) outfilename=oname
+
 #--------------------
 
 set grid
@@ -17,7 +21,7 @@ set term pngcairo enhanced color font "Arial,16"
 
 #--------------------
 
-set output "out/histogram.png"
+set output outfilename
 
 set xlabel "Value"
 set ylabel "Count"
