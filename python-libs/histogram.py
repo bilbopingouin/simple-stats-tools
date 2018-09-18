@@ -20,7 +20,8 @@ class histogram:
         self.step = float(vmax-vmin)/float(nbins)
 
     def add_value(self,v):
-        self.array[int((v-v%self.step)/(self.step))] += 1
+        bin_idx = int(((v-self.min)-(v-self.min)%self.step)/(self.step))
+        self.array[bin_idx] += 1
 
     def print_array(self):
         print(self.array)
@@ -28,3 +29,21 @@ class histogram:
     def print(self):
         for i in range(len(self.array)):
            print(i*self.step+0.5*self.step+self.min,self.array[i]) 
+
+# Test unit
+if __name__ == '__main__':
+    import random
+
+    # Basic histogram
+    vmin = random.uniform(0,5)
+    vmax = random.uniform(5,20)
+    nbins= random.randint(7,20)
+
+    print('#',vmin,vmax,nbins)
+
+    H = histogram(vmin,vmax,nbins)
+
+    for n in range(200):
+        H.add_value(random.uniform(vmin,vmax))
+
+    H.print()

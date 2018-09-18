@@ -5,7 +5,6 @@ reset
 filename=""
 if ("$#" eq sprintf("%d",1)) filename="$0"
 if (exist("fname")) filename=fname
-print filename
 
 #--------------------
 
