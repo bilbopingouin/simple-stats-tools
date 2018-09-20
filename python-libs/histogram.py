@@ -20,8 +20,10 @@ class histogram:
         self.step = float(vmax-vmin)/float(nbins)
 
     def add_value(self,v):
-        bin_idx = int(((v-self.min)-(v-self.min)%self.step)/(self.step))
-        self.array[bin_idx] += 1
+        if v>self.min and v<self.max:
+            bin_idx = int(((v-self.min)-(v-self.min)%self.step)/(self.step))
+            #print(bin_idx,'= (',v-self.min,'-',(v-self.min)%self.step,') /',self.step)
+            self.array[bin_idx] += 1
 
     def print_array(self):
         print(self.array)

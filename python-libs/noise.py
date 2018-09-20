@@ -4,22 +4,55 @@
 import random
 import math
 
+class noise_gauss:
+    active = False
+
+    def __init__(self):
+        self.active = True
+
+    def get_value(self,v,sigma):
+        if self.active:
+            return (v+random.gauss(0.0,sigma))
+        else:
+            return float('nan')
+ 
+class noise_uniform:
+    active = False
+
+    def __init__(self):
+        self.active = True
+
+    def get_value(self,v,vmax):
+        if self.active:
+            return (v+random.uniform(-vmax,vmax))
+        else:
+            return float('nan')
+        
+
 class noise:
+    skip = True
+
     def __init__(self,ntype,par,rel_abs):
-        self.init_parameters(ntype,par,rel_abs)
+        self.init(ntype,par,rel_abs)
 
-    def init_parameters(self,ntype,par,rel_abs):
-        self.noise_type        = ntype
-        self.noise_parameter   = par
-        self.relative_absolute = rel_abs
+    def init(self,ntype,par,rel_abs):
+        self.noise_parameter    = par
+        self.relative_absolute  = rel_abs
 
-    def uniform(self,y):
-        return (y+random.uniform(-self.max,self.max))
+        if ntype == 'uniform':
+            self.noise_generator = noise_uniform()
+        elif ntype == 'gauss':
+            self.noise_generator = noise_gauss()
+        else:
+            print('ERR: noise generator unknown:',ntype)
+            return 0
 
-    def gauss(self,y):
-        return (y+random.gauss(0.0,self.max))
+        self.skip = False
 
     def noisy(self,y):
+        if self.skip:
+            return float('nan')
+
         if self.relative_absolute == 'relative':
             self.max = self.noise_parameter*y
         elif self.relative_absolute == 'absolute':
@@ -28,14 +61,10 @@ class noise:
             self.max = self.noise_parameter*math.sqrt(y)
         else:
             print('ERR: paramter type not known')
-            return 0.0
+            return float('nan')
 
-        if self.noise_type == 'uniform':
-            return self.uniform(y)
-        if self.noise_type == 'gauss':
-            return self.gauss(y)
-        else:
-            return y
+        return self.noise_generator.get_value(y,self.max)
+
 
 
 
