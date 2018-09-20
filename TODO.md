@@ -4,8 +4,8 @@
 - Noise generator           [x]
 - Function generator        [ ]
   - Fixed functions         [ ]
-    - Polynomial            [ ]
-    - Sinus                 [ ]
+    - Polynomial            [x]
+    - Sinus                 [x]
     - Decreasing exp        [ ]
     - Gauss                 [ ]
     - Poisson               [ ]
@@ -16,4 +16,5 @@
   - Histogram               [ ]
   - Trace                   [ ]
 - Function subtraction      [ ]
-  
+- Average                   [x] 
+ 

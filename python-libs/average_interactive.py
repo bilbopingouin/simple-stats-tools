@@ -42,7 +42,7 @@ def print_output():
     average     = float(sum_values)/float(nb_values)
     variance    = float(sum_squared)/float(nb_values) - average*average
 
-    print(output_string % (average,variance,math.sqrt(variance)) )
+    print(output_string % (average,variance,math.sqrt(variance),nb_values,sum_values))
 
 #--------------------------
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     parse_commands()
 
-    output_string = "<v> = %.{}E\ts^2(v) = %.{}E\ts(v) = %.{}E".format(output_precision,output_precision,output_precision)
+    output_string = "<v> = %.{}E\ts^2(v) = %.{}E\ts(v) = %.{}E\tN = %d\tSum = %.{}E".format(output_precision,output_precision,output_precision,output_precision)
 
     if len(list_values):
         for value in list_values:
