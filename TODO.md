@@ -13,7 +13,7 @@
 [x]     - Square root
 [x]     - 1/x
 [ ]   - Data filtered functions
-[ ]     - Moving average
+[x]     - Moving average
 [ ]     - Smoothing function
 [ ] - Function fit
 [ ]   - Histogram
