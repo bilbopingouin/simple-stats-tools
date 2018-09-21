@@ -90,7 +90,8 @@ class function_sine(function_generic):
         self.function_name    = 'Sine'
 
     def function(self,x,y):
-        return self.parameter_float[0]*math.sin(2*math.pi*self.parameter_float[1]*(x-self.parameter_float[2]))
+        # math.sin expects a value in degree
+        return self.parameter_float[0]*math.sin(360*self.parameter_float[1]*(x-self.parameter_float[2]))
 
 class function_exp(function_generic):
     def __init__(self):
