@@ -16,7 +16,7 @@ class function_generic(object):
         self.parameters = parameters.split(':')
 
         if len(self.parameters) != self.parameter_number:
-            print('ERR:',self.function_name,'function parameters number:',parameters)
+            print('ERR:',self.function_name,'function parameters number:',len(self.parameters),'expected:',self.parameter_number,'(',parameters,')')
             return 0
 
         print('#',self.parameters)
@@ -110,6 +110,43 @@ class function_gauss(function_generic):
     def function(self,x,y):
         return self.parameter_float[0]*math.exp(-(x-self.parameter_float[2])*(x-self.parameter_float[2])/(self.parameter_float[1]*self.parameter_float[1]))
 
+class function_poisson(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number  = 2
+        self.function_name     = 'Poisson'
+
+    def function(self,x,y):
+        l = self.parameter_float[1]
+        return self.parameter_float[0]*math.exp(-l)*(l**(int(x)))/(math.factorial(x)) 
+
+class function_log(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number  = 2
+        self.function_name     = 'Log'
+
+    def function(self,x,y):
+        return self.parameter_float[0]*math.log(self.parameter_float[1]+x) 
+
+class function_sqrt(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number  = 2
+        self.function_name     = 'Sqrt'
+
+    def function(self,x,y):
+        return self.parameter_float[0]*math.sqrt(self.parameter_float[1]+x) 
+
+class function_inverse(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number  = 2
+        self.function_name     = 'Inverse'
+
+    def function(self,x,y):
+        return self.parameter_float[0]*(1.0/(self.parameter_float[1]+x))
+
 #-----------------------------------------------------
 
 class function_generator:
@@ -127,6 +164,14 @@ class function_generator:
             self.function = function_exp()
         elif function == 'gauss':
             self.function = function_gauss()
+        elif function == 'poisson':
+            self.function = function_poisson()
+        elif function == 'log':
+            self.function = function_log()
+        elif function == 'sqrt':
+            self.function = function_sqrt()
+        elif function == 'inverse':
+            self.function = function_inverse()
         else:
             print('ERR: unknown function:',self.function)
             return 0
@@ -147,8 +192,8 @@ class function_generator:
 if __name__ == '__main__':
     xbasis = 0
 
-    functions = ['polynomial','polynomial','sine','exponential','gauss']
-    parameters= ['1:0.1:5','2:0.002:-0.3:1','5:0.1:0.5','10:0.2','10:10:50']
+    functions = ['polynomial',  'polynomial',       'sine',     'exponential',  'gauss',    'poisson',  'log','sqrt','inverse']
+    parameters= ['1:0.1:5',     '2:0.002:-0.3:1',   '5:0.1:0.5','10:0.2',       '10:10:50', '10:4',     '5:2','0.5:5','10:5']
 
     for n in range(len(functions)):
         print('#Processing:',functions[n],parameters[n])
