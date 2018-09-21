@@ -6,7 +6,7 @@
   - Fixed functions         [ ]
     - Polynomial            [x]
     - Sinus                 [x]
-    - Decreasing exp        [ ]
+    - Decreasing exp        [x]
     - Gauss                 [ ]
     - Poisson               [ ]
   - Data filtered functions [ ]

@@ -53,7 +53,7 @@ class function_sine:
     def init(self,parameters):
         self.parameters = parameters.split(':')
 
-        if len(self.parameters) < 3:
+        if len(self.parameters) != 3:
             print('ERR: Sine function parameters not sufficient:',parameters)
             return 0
 
@@ -74,6 +74,33 @@ class function_sine:
 
         return self.amplitude*math.sin(2*math.pi*self.frequency*(x-self.phase))
 
+class function_exp:
+    def __init__(self):
+        self.active = False
+
+    def init(self,parameters):
+        self.parameters = parameters.split(':')
+
+        if len(self.parameters) != 2:
+            print('ERR: Exponential function parameters number:',parameters)
+            return 0
+
+        try:
+            self.amplitude  = float(self.parameters[0])
+            self.factor     = float(self.parameters[1])
+        except:
+            print('ERR: Exponential function parameter format:',parameters)
+            return 0
+
+        self.active = True
+        return 1
+
+    def get_value(self,x,y):
+        if not self.active:
+            return float('nan')
+
+        return self.amplitude*math.exp(-self.factor*x)
+
 
 #-----------------------------------------------------
 
@@ -88,6 +115,8 @@ class function_generator:
             self.function = function_polynomial()
         elif function == 'sine':
             self.function = function_sine()
+        elif function == 'exponential':
+            self.function = function_exp()
         else:
             print('ERR: unknown function:',self.function)
             return 0
@@ -108,8 +137,8 @@ class function_generator:
 if __name__ == '__main__':
     xbasis = 0
 
-    functions = ['polynomial','polynomial','sine']
-    parameters= ['1:0.1:5','2:0.002:-0.3:1','5:0.1:0.5']
+    functions = ['polynomial','polynomial','sine','exponential']
+    parameters= ['1:0.1:5','2:0.002:-0.3:1','5:0.1:0.5','10:0.2']
 
     for n in range(len(functions)):
         F = function_generator(functions[n],parameters[n])
