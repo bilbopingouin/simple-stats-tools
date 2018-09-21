@@ -192,12 +192,21 @@ class function_generator:
 if __name__ == '__main__':
     xbasis = 0
 
-    functions = ['polynomial',  'polynomial',       'sine',     'exponential',  'gauss',    'poisson',  'log','sqrt','inverse']
-    parameters= ['1:0.1:5',     '2:0.002:-0.3:1',   '5:0.1:0.5','10:0.2',       '10:10:50', '10:4',     '5:2','0.5:5','10:5']
+    functions = [
+                    ['polynomial',  '1:0.1:5'], 
+                    ['polynomial',  '2:0.002:-0.3:1'],
+                    ['sine',        '5:0.1:0.5'],
+                    ['exponential', '10:0.2'],
+                    ['gauss',       '10:10:50'],
+                    ['poisson',     '10:4'],
+                    ['log',         '5:2'],
+                    ['sqrt',        '0.5:5'],
+                    ['inverse',     '10:5']
+                ]
 
     for n in range(len(functions)):
-        print('#Processing:',functions[n],parameters[n])
-        F = function_generator(functions[n],parameters[n])
+        print('#Processing:',functions[n][0],functions[n][1])
+        F = function_generator(functions[n][0],functions[n][1])
 
         for n in range(100):
             y = F.get_function_value(n,1)

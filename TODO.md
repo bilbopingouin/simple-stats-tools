@@ -3,7 +3,7 @@
 [x] - Histogram
 [x] - Noise generator
 [ ] - Function generator
-[ ]   - Fixed functions
+[x]   - Fixed functions
 [x]     - Polynomial
 [x]     - Sinus
 [x]     - Decreasing exp
@@ -11,7 +11,7 @@
 [x]     - Poisson
 [x]     - Log
 [x]     - Square root
-[ ]     - 1/x
+[x]     - 1/x
 [ ]   - Data filtered functions
 [ ]     - Moving average
 [ ]     - Smoothing function
