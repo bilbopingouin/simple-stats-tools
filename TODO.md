@@ -2,7 +2,7 @@
 
 [x] - Histogram
 [x] - Noise generator
-[ ] - Function generator
+[x] - Function generator
 [x]   - Fixed functions
 [x]     - Polynomial
 [x]     - Sinus
@@ -12,9 +12,10 @@
 [x]     - Log
 [x]     - Square root
 [x]     - 1/x
-[ ]   - Data filtered functions
+[x]     - Identity
+[x]   - Data filtered functions
 [x]     - Moving average
-[ ]     - Smoothing function
+[x]     - Smoothing functions
 [ ] - Function fit
 [ ]   - Histogram
 [ ]   - Trace

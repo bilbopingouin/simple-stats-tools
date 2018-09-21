@@ -147,11 +147,20 @@ class function_inverse(function_generic):
     def function(self,x,y):
         return self.parameter_float[0]*(1.0/(self.parameter_float[1]+x))
 
-class function_window(function_generic):
+class function_identity(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number  = 1
+        self.function_name     = 'Identity'
+
+    def function(self,x,y):
+        return y
+
+class function_window_average(function_generic):
     def __init__(self):
         super().__init__()
         self.parameter_number = 1
-        self.function_name    = 'Window average'
+        self.function_name    = 'Window moving average'
         self.window           = []
 
     def add_to_window(self,y):
@@ -165,7 +174,41 @@ class function_window(function_generic):
     def function(self,x,y):
         self.add_to_window(y)
         return sum(self.window)/len(self.window)
-        
+
+class function_factored_moving_average(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number   = 1
+        self.function_name      = 'Factored moving average'
+        self.sum_v              = 0
+
+    def function(self,x,y):
+        self.sum_v = (self.parameter_float[0]*self.sum_v+y)/(self.parameter_float[0]+1)
+        return self.sum_v
+
+class function_cumulative_average(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number   = 1
+        self.function_name      = 'Cumulative average'
+        self.sum_v              = 0
+        self.sum_n              = 0
+
+    def function(self,x,y):
+        self.sum_v = (self.sum_n*self.sum_v+y)/(self.sum_n+1)
+        self.sum_n += 1
+        return self.sum_v
+
+class function_quadratic_moving_average(function_generic):
+    def __init__(self):
+        super().__init__()
+        self.parameter_number   = 1
+        self.function_name      = 'Quadratic moving average'
+        self.sum_v              = 0
+
+    def function(self,x,y):
+        self.sum_v = (self.parameter_float[0]*self.sum_v+y*y)/(self.parameter_float[0]+y)
+        return self.sum_v
 
 #-----------------------------------------------------
 
@@ -192,8 +235,16 @@ class function_generator:
             self.function = function_sqrt()
         elif function == 'inverse':
             self.function = function_inverse()
+        elif function == 'identity':
+            self.function = function_identity()
         elif function == 'window':
-            self.function = function_window()
+            self.function = function_window_average()
+        elif function == 'cumulative':
+            self.function = function_cumulative_average()
+        elif function == 'factored':
+            self.function = function_factored_moving_average()
+        elif function == 'quadratic':
+            self.function = function_quadratic_moving_average()
         else:
             print('ERR: unknown function:',self.function)
             return 0
@@ -262,7 +313,11 @@ if __name__ == '__main__':
                     ['log',         '5:2'],
                     ['sqrt',        '0.5:5'],
                     ['inverse',     '10:5'],
-                    ['window',      '5']
+                    ['identity',    '0'],
+                    ['window',      '5'],
+                    ['cumulative',  '0'],
+                    ['factored',    '5'],
+                    ['quadratic',   '0.1']
                 ]
 
     for n in range(len(functions)):
