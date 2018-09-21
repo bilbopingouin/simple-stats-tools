@@ -4,7 +4,44 @@ import math
 
 #-----------------------------------------------------
 
-class function_polynomial:
+class function_generic(object):
+
+    def __init__(self):
+        self.active           = False
+        self.parameter_float  = []
+        self.parameter_number = 2
+        self.function_name    = 'generic'
+
+    def init(self,parameters):
+        self.parameters = parameters.split(':')
+
+        if len(self.parameters) != self.parameter_number:
+            print('ERR:',self.function_name,'function parameters number:',parameters)
+            return 0
+
+        print('#',self.parameters)
+
+        #self.parameter_float = []
+        try:
+            for p in self.parameters:
+                self.parameter_float.append(float(p))
+        except:
+            print('ERR:',self.function_name,'function parameters format:',parameters)
+            return 0
+
+        self.active = True
+        return 1
+
+    def function(self,x,y):
+        return 0
+
+    def get_value(self,x,y):
+        if not self.active:
+            return float('nan')
+
+        return self.function(x,y)
+
+class function_polynomial(object):
     def __init__(self):
         self.active = False
 
@@ -46,88 +83,32 @@ class function_polynomial:
             s = s*x + self.par_float[n]
         return s
         
-class function_sine:
+class function_sine(function_generic):
     def __init__(self):
-        self.active = False
+        super().__init__()
+        self.parameter_number = 3
+        self.function_name    = 'Sine'
 
-    def init(self,parameters):
-        self.parameters = parameters.split(':')
+    def function(self,x,y):
+        return self.parameter_float[0]*math.sin(2*math.pi*self.parameter_float[1]*(x-self.parameter_float[2]))
 
-        if len(self.parameters) != 3:
-            print('ERR: Sine function parameters not sufficient:',parameters)
-            return 0
-
-        try:
-            self.amplitude = float(self.parameters[0])
-            self.frequency = float(self.parameters[1])
-            self.phase     = float(self.parameters[2])
-        except:
-            print('ERR: Sine function parameters type not as expected:',parameters)
-            return 0
-
-        self.active = True
-        return 1
-
-    def get_value(self,x,y):
-        if not self.active:
-            return float('nan')
-
-        return self.amplitude*math.sin(2*math.pi*self.frequency*(x-self.phase))
-
-class function_exp:
+class function_exp(function_generic):
     def __init__(self):
-        self.active = False
+        super().__init__()
+        self.parameter_number = 2
+        self.function_name    = 'Exponential'
 
-    def init(self,parameters):
-        self.parameters = parameters.split(':')
+    def function(self,x,y):
+        return self.parameter_float[0]*math.exp(-self.parameter_float[1]*x)
 
-        if len(self.parameters) != 2:
-            print('ERR: Exponential function parameters number:',parameters)
-            return 0
-
-        try:
-            self.amplitude  = float(self.parameters[0])
-            self.factor     = float(self.parameters[1])
-        except:
-            print('ERR: Exponential function parameter format:',parameters)
-            return 0
-
-        self.active = True
-        return 1
-
-    def get_value(self,x,y):
-        if not self.active:
-            return float('nan')
-
-        return self.amplitude*math.exp(-self.factor*x)
-
-class function_gauss:
+class function_gauss(function_generic):
     def __init__(self):
-        self.active = False
+        super().__init__()
+        self.parameter_number = 3
+        self.function_name    = 'Gauss'
 
-    def init(self,parameters):
-        self.parameters = parameters.split(':')
-
-        if len(self.parameters) != 3:
-            print('ERR: Exponential function parameters number:',parameters)
-            return 0
-
-        try:
-            self.amplitude  = float(self.parameters[0])
-            self.sigma      = float(self.parameters[1])
-            self.mean       = float(self.parameters[2])
-        except:
-            print('ERR: Exponential function parameter format:',parameters)
-            return 0
-
-        self.active = True
-        return 1
-
-    def get_value(self,x,y):
-        if not self.active:
-            return float('nan')
-
-        return self.amplitude*math.exp(-(x-self.mean)*(x-self.mean)/(self.sigma*self.sigma))
+    def function(self,x,y):
+        return self.parameter_float[0]*math.exp(-(x-self.parameter_float[2])*(x-self.parameter_float[2])/(self.parameter_float[1]*self.parameter_float[1]))
 
 #-----------------------------------------------------
 
@@ -170,6 +151,7 @@ if __name__ == '__main__':
     parameters= ['1:0.1:5','2:0.002:-0.3:1','5:0.1:0.5','10:0.2','10:10:50']
 
     for n in range(len(functions)):
+        print('#Processing:',functions[n],parameters[n])
         F = function_generator(functions[n],parameters[n])
 
         for n in range(100):
