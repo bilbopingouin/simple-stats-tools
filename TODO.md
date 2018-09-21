@@ -7,7 +7,7 @@
     - Polynomial            [x]
     - Sinus                 [x]
     - Decreasing exp        [x]
-    - Gauss                 [ ]
+    - Gauss                 [x]
     - Poisson               [ ]
   - Data filtered functions [ ]
     - Moving average        [ ]
