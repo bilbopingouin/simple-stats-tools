@@ -1,6 +1,45 @@
-# This class can generate various functions.
+#   This class can generate various functions.
+#
+#   The following functions are supported:
+#       +--------------+----------------------------+------------+------------------+
+#       |Function      | Formula                    |Number of   |  Description     |
+#       |              |                            |parameters  |  of parameters   |
+#       +--------------+----------------------------+------------+------------------+
+#       |'polynomial'  | a0+a1*x+..+an*x^n          |N+2         |  N:a0:a1:..:aN   |
+#       |'sine'        | a0*sin(2*pi*a1*(x-a2))     |3           |  a0:a1:a2        |
+#       |'exponential' | a0*exp(-a1*x)              |2           |  a0:a1           |
+#       |'gauss'       | a0*exp(-((x-a1)^2)/(a2^2)) |3           |  a0:a1:a2        |
+#       |'poisson'     | a0*exp(-a1)*(a1^x)/(x!)    |2           |  a0:a1           |
+#       |'log'         | a0*log(a1+x)               |2           |  a0:a1           |
+#       |'sqrt'        | a0*sqrt(a1+x)              |2           |  a0:a1           |
+#       |'inverse'     | a0 / (a1+x)                |2           |  a0:a1           |
+#       |'identity'    | x                          |0           |  (empty string)  |
+#       |'window'      | <x>_[n-k:n]                |1           |  k               |
+#       |'cumulative'  | ((N\sum x) + x) / (N+1)    |0           |  (empty string)  |
+#       |'factored'    | ((a0\sum x) + x) / (a0+1)  |1           |  a0              |
+#       |'quadratic'   | ((a0\sum x) + x^2) / (a0+x)|1           |  a0              |
+#       +--------------+----------------------------+------------+------------------+
+#
 
 import math
+
+#-----------------------------------------------------
+
+parameters_function_numbers = {
+    'polynomial'  : 'N+2' ,
+    'sine'        : '3'   ,
+    'exponential' : '2'   ,
+    'gauss'       : '3'   ,
+    'poisson'     : '2'   ,
+    'log'         : '2'   ,
+    'sqrt'        : '2'   ,
+    'inverse'     : '2'   ,
+    'identity'    : '0'   ,
+    'window'      : '1'   ,
+    'cumulative'  : '0'   ,
+    'factored'    : '1'   ,
+    'quadratic'   : '1'     
+}
 
 #-----------------------------------------------------
 
@@ -15,19 +54,20 @@ class function_generic(object):
     def init(self,parameters):
         self.parameters = parameters.split(':')
 
-        if len(self.parameters) != self.parameter_number:
-            print('ERR:',self.function_name,'function parameters number:',len(self.parameters),'expected:',self.parameter_number,'(',parameters,')')
-            return 0
+        if self.parameter_number>0:
+            if len(self.parameters) != self.parameter_number:
+                print('ERR:',self.function_name,'function parameters number:',len(self.parameters),'expected:',self.parameter_number,'(',parameters,')')
+                return 0
 
-        print('#',self.parameters)
+            print('#',self.parameters)
 
-        #self.parameter_float = []
-        try:
-            for p in self.parameters:
-                self.parameter_float.append(float(p))
-        except:
-            print('ERR:',self.function_name,'function parameters format:',parameters)
-            return 0
+            #self.parameter_float = []
+            try:
+                for p in self.parameters:
+                    self.parameter_float.append(float(p))
+            except:
+                print('ERR:',self.function_name,'function parameters format:',parameters)
+                return 0
 
         self.active = True
         return 1
@@ -151,7 +191,7 @@ class function_inverse(function_generic):
 class function_identity(function_generic):
     def __init__(self):
         super().__init__()
-        self.parameter_number  = 1
+        self.parameter_number  = 0
         self.function_name     = 'Identity'
 
     def function(self,x,y):
@@ -190,7 +230,7 @@ class function_factored_moving_average(function_generic):
 class function_cumulative_average(function_generic):
     def __init__(self):
         super().__init__()
-        self.parameter_number   = 1
+        self.parameter_number   = 0
         self.function_name      = 'Cumulative average'
         self.sum_v              = 0
         self.sum_n              = 0
@@ -314,9 +354,9 @@ if __name__ == '__main__':
                     ['log',         '5:2'],
                     ['sqrt',        '0.5:5'],
                     ['inverse',     '10:5'],
-                    ['identity',    '0'],
+                    ['identity',    ''],
                     ['window',      '5'],
-                    ['cumulative',  '0'],
+                    ['cumulative',  ''],
                     ['factored',    '5'],
                     ['quadratic',   '0.1']
                 ]
