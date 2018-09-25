@@ -79,6 +79,7 @@ class function_generic(object):
         if not self.active:
             return float('nan')
 
+        print('#',self.parameters)
         return self.function(x,y)
 
 class function_polynomial(object):
@@ -299,6 +300,15 @@ class function_generator:
     def get_function_value(self,x,y):
         if not self.skip:
             return self.function.get_value(x,y)
+        else:
+            return float('nan')
+
+    def get_function_array(self,x,y):
+        if not self.skip:
+            out = []
+            for n in range(len(x)):
+                out.append(self.function.get_value(x[n],y[n]))
+            return out
         else:
             return float('nan')
 
