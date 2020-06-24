@@ -24,14 +24,13 @@ def parse_commands():
     parser.add_argument('-p','--output-precision',default='2',help='Sets the number of digits to be printed',required=False)
     parser.add_argument('values',metavar='N', type=float, nargs='*',help='Input values')
 
-    try:
-        options = parser.parse_args()
-    except:
-        sys.exit(0)
+    options = parser.parse_args()
 
     try:
         output_precision = int(options.output_precision)
-    except:
+    except ValueError as verr:
+        print('Output format parameter not correct: ',options.output_precision)
+    except Exception as ex:
         print('Output format parameter not correct: ',options.output_precision)
 
     list_values = options.values
@@ -54,7 +53,7 @@ if __name__ == '__main__':
 
     output_string = "<v> = %.{}E\ts^2(v) = %.{}E\ts(v) = %.{}E\tN = %d\tSum = %.{}E".format(output_precision,output_precision,output_precision,output_precision)
 
-    if len(list_values):
+    if list_values:     # exists and is not empty
         for value in list_values:
             nb_values   += 1
             sum_values  += value
@@ -69,13 +68,16 @@ if __name__ == '__main__':
             print('v =',end=' ')
             try:
                 ans = input()
-            except:
+            except Exception:
                 print('Closing...')
                 sys.exit(0)
 
             try:
                 value = float(ans)
-            except:
+            except ValueError as verr:
+                print('Wrong input format:',ans)
+                sys.exit(1)
+            except Exception as verr:
                 print('Wrong input format:',ans)
                 sys.exit(1)
 
@@ -84,5 +86,3 @@ if __name__ == '__main__':
             sum_squared += value*value
 
             print_output()
-
-

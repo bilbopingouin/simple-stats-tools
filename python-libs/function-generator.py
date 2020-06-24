@@ -25,7 +25,10 @@ class function_generic(object):
         try:
             for p in self.parameters:
                 self.parameter_float.append(float(p))
-        except:
+        except ValueError as verr:
+            print('ERR:',self.function_name,'function parameters format:',parameters)
+            return 0
+        except Exception as ex:
             print('ERR:',self.function_name,'function parameters format:',parameters)
             return 0
 
@@ -54,8 +57,11 @@ class function_polynomial(object):
 
         try:
             self.order = int(self.parameters[0])
-        except:
-            print('ERR: polynomial order not correct')
+        except ValueError as verr:
+            print('ERR: polynomial order not correct: '.verr.exception())
+            return 0
+        except Exception as ex:
+            print('ERR: an error occured while processing the order:'.ex.exception())
             return 0
         
         if len(self.parameters) != self.order+2:
@@ -67,8 +73,11 @@ class function_polynomial(object):
         try:
             for n in range(len(self.parameters)-1):
                 self.par_float.append(float(self.parameters[n+1]))
-        except:
-            print('ERR: polynomial function: error while converting the parameters')
+        except ValueError as verr:
+            print('ERR: polynomial function: error while converting the parameters: '.verr.exception())
+            return 0
+        except Exception as ex:
+            print('ERR: an error occured while converting the parameters:'.ex.exception())
             return 0
 
         self.active = True
@@ -258,12 +267,11 @@ class function_generator:
     def get_function_value(self,x,y):
         if not self.skip:
             return self.function.get_value(x,y)
-        else:
-            return float('nan')
+
+        return float('nan')
 
 # Test unit
 if __name__ == '__main__':
-    xbasis = 0
 
     # Using: https://stackoverflow.com/questions/32111941/r-how-to-generate-a-noisy-sine-function#32112610
     yvalues =   [
@@ -320,14 +328,11 @@ if __name__ == '__main__':
                     ['quadratic',   '0.1']
                 ]
 
-    for n in range(len(functions)):
-        print('#Processing:',functions[n][0],functions[n][1])
-        F = function_generator(functions[n][0],functions[n][1])
+    for n,func in enumerate(functions):
+        print('#Processing:',func[0],func[1])
+        F = function_generator(func[0],func[1])
 
-        for n in range(100):
-            y = F.get_function_value(n,yvalues[n])
+        for m in range(100):
+            y = F.get_function_value(m,yvalues[m])
             if not math.isnan(y):
-                print(n+xbasis*100,y)
-
-        xbasis += 1
-
+                print(m+n*100,y)

@@ -13,8 +13,8 @@ class noise_gauss:
     def get_value(self,v,sigma):
         if self.active:
             return (v+random.gauss(0.0,sigma))
-        else:
-            return float('nan')
+
+        return float('nan')
  
 class noise_uniform:
     active = False
@@ -25,8 +25,8 @@ class noise_uniform:
     def get_value(self,v,vmax):
         if self.active:
             return (v+random.uniform(-vmax,vmax))
-        else:
-            return float('nan')
+
+        return float('nan')
         
 
 class noise:
@@ -92,4 +92,3 @@ if __name__ == '__main__':
                 print(100*index+n,N.noisy(base_value))
 
             index += 1
-

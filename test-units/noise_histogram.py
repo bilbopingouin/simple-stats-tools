@@ -20,5 +20,3 @@ if __name__ == '__main__':
         H.add_value(N.noisy(5.0))
 
     H.print()
-    
-
