@@ -30,22 +30,3 @@ class histogram:
     def print(self):
         for i in range(len(self.array)):
             print(i*self.step+0.5*self.step+self.min, self.array[i])
-
-
-# Test unit
-if __name__ == '__main__':
-    import random
-
-    # Basic histogram
-    vmin = random.uniform(0, 5)
-    vmax = random.uniform(5, 20)
-    nbins = random.randint(7, 20)
-
-    print('#', vmin, vmax, nbins)
-
-    H = histogram(vmin, vmax, nbins)
-
-    for n in range(200):
-        H.add_value(random.uniform(vmin, vmax))
-
-    H.print()

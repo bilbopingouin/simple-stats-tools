@@ -5,22 +5,9 @@ import argparse
 
 # --------------------------
 
-sum_values = 0
-sum_squared = 0
-nb_values = 0
-
-average = 0.0
-variance = 0.0
-
-output_string = ""
-
-# --------------------------
-
 
 def parse_commands():
-    global output_precision
-    global list_values
-
+    # Parser
     parser = argparse.ArgumentParser(
         description='Calculating average and variance of inputs')
     parser.add_argument(
@@ -37,77 +24,117 @@ def parse_commands():
         nargs='*',
         help='Input values')
 
+    # Parse input
     options = parser.parse_args()
 
+    # Parameters
+    parameters = {}
     try:
-        output_precision = int(options.output_precision)
+        parameters['output_precision'] = int(options.output_precision)
     except ValueError:
         print(
             'Output format parameter not correct: ',
             options.output_precision
         )
-    except Exception:
-        print(
-            'Output format parameter not correct: ',
-            options.output_precision
-        )
+        sys.exit(1)
 
-    list_values = options.values
+    parameters['list_values'] = options.values
+
+    return parameters
 
 
 # --------------------------
 
-def print_output():
-    average = float(sum_values)/float(nb_values)
-    variance = float(sum_squared)/float(nb_values) - average*average
+def print_output(output_string, calculated_values):
+    if 0 == calculated_values['nb_values']:
+        average = 0
+        variance = 0
+    else:
+        average = float(calculated_values['sum_values'])\
+            / float(calculated_values['nb_values'])
+        variance = float(calculated_values['sum_squared'])\
+            / float(calculated_values['nb_values'])\
+            - average*average
 
-    print(output_string %
-          (average, variance, math.sqrt(variance), nb_values, sum_values))
+    print(output_string % (
+        average,
+        variance,
+        math.sqrt(variance),
+        calculated_values['nb_values'],
+        calculated_values['sum_values']))
+
 
 # --------------------------
 
+def get_output_string(precision):
+    return '<v> = %.{}E\ts^2(v) = %.{}E\ts(v) = %.{}E\tN = %d\t'\
+           'Sum = %.{}E'.format(
+               precision, precision,
+               precision, precision)
 
-if __name__ == '__main__':
-    global output_precision
-    global list_values
 
-    parse_commands()
+# --------------------------
 
-    output_string = '<v> = %.{}E\ts^2(v) = %.{}E\ts(v) = %.{}E\tN = %d\t'\
-                    'Sum = %.{}E'.format(
-                        output_precision, output_precision,
-                        output_precision, output_precision)
+def interactive(parameters):
 
-    if list_values:     # exists and is not empty
-        for value in list_values:
-            nb_values += 1
-            sum_values += value
-            sum_squared += value*value
+    calculated_values = {
+        'list_values': [],
+        'nb_values': 0,
+        'sum_values': 0,
+        'sum_squared': 0
+    }
 
-        print('Using the following list of values:')
-        print(list_values)
-        print_output()
+    if parameters['list_values']:     # exists and is not empty
+        for value in parameters['list_values']:
+            calculated_values['list_values'] += [value]
+            calculated_values['nb_values'] += 1
+            calculated_values['sum_values'] += value
+            calculated_values['sum_squared'] += value*value
 
     else:
         while True:
-            print('v =', end=' ')
             try:
-                ans = input()
-            except Exception:
-                print('Closing...')
-                sys.exit(0)
+                ans = input('v = ')
+            except KeyboardInterrupt:
+                print('\nFinished.')
+                break
 
             try:
                 value = float(ans)
             except ValueError:
                 print('Wrong input format:', ans)
-                sys.exit(1)
-            except Exception:
-                print('Wrong input format:', ans)
-                sys.exit(1)
+                break
 
-            nb_values += 1
-            sum_values += value
-            sum_squared += value*value
+            calculated_values['list_values'] += [value]
 
-            print_output()
+            calculated_values['nb_values'] += 1
+            calculated_values['sum_values'] += value
+            calculated_values['sum_squared'] += value*value
+
+            print_output(parameters['output_string'], calculated_values)
+
+    # Return all the values calculated
+    return calculated_values
+
+
+# --------------------------
+
+def main():
+    # Get input parameters
+    parameters = parse_commands()
+
+    # Define the output string
+    parameters['output_string']\
+        = get_output_string(parameters['output_precision'])
+
+    # Calculate the values
+    calculated_values = interactive(parameters)
+
+    # Print the final ouput
+    print('Using the following list of values:')
+    print(calculated_values['list_values'])
+    print_output(parameters['output_string'], calculated_values)
+
+
+if __name__ == '__main__':
+    main()
