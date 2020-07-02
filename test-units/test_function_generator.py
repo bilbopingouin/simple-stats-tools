@@ -5,16 +5,20 @@
 # standard libs
 import math
 import os
-import sys
+import importlib.util
 
 # local directory to path
 path = os.path.dirname(__file__)
 if not path:
     path = '.'
-sys.path.append(path+'/../python-libs/')
 
 # local libs
-import function_generator  # noqa: E402
+spec = importlib.util.spec_from_file_location(
+        'function_generator',
+        path+'/../python-libs/function_generator.py'
+    )
+function_generator = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(function_generator)
 
 ####################################
 # Tests
