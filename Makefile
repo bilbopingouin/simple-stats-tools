@@ -9,4 +9,5 @@ syntax:
 
 unittests:
 	@echo "Running the unit tests..."
+	@python3 -m pytest --capture=sys
 	@echo "...done"
