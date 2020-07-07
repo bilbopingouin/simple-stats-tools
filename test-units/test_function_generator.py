@@ -213,6 +213,51 @@ def test_function_generator_quadratic():
     assert expected_result == function_result
 
 
+def test_function_generator_wrong_function():
+    F = function_generator.function_generator('foo', '0')
+
+    assert F.skip is True
+    assert math.isnan(F.get_function_value(0,0)) is True
+
+
+def test_function_generator_parameter_size():
+    F = function_generator.function_generator('gauss', '0')
+
+    assert F.skip is True
+    assert math.isnan(F.get_function_value(0,0)) is True
+
+
+def test_function_generator_parameter_type():
+    F = function_generator.function_generator('log', '0:a')
+
+    assert math.isnan(F.get_function_value(0,0)) is True
+
+    F = function_generator.function_generator('polynomial', '0:a')
+
+    assert math.isnan(F.get_function_value(0,0)) is True
+
+def test_function_generator_function_generic():
+    F = function_generator.function_generic()
+    F.init('0:1')
+
+    assert 0 == F.function(float('nan'), float('nan'))
+    assert 0 == F.get_value(float('nan'), float('nan'))
+
+    F.active = False
+    assert math.isnan(F.get_value(float('nan'), float('nan'))) is True
+
+
+def test_function_generator_function_polynomial_errors():
+    F = function_generator.function_polynomial()
+
+    assert 2 == F.init('')
+    assert 3 == F.init('a:5')
+    assert 4 == F.init('0:1:2')
+    assert 5 == F.init('0:a')
+    assert math.isnan(F.get_value(0,0)) is True
+
+
+
 def test_functions_generations():
 
     # Using:

@@ -25,7 +25,7 @@ class function_generic(object):
                 'expected:',
                 self.parameter_number,
                 '(', parameters, ')')
-            return 0
+            return 1
 
         print('#', self.parameters)
 
@@ -35,14 +35,10 @@ class function_generic(object):
         except ValueError:
             print('ERR:', self.function_name,
                   'function parameters format:', parameters)
-            return 0
-        except Exception:
-            print('ERR:', self.function_name,
-                  'function parameters format:', parameters)
-            return 0
+            return 2
 
         self.active = True
-        return 1
+        return 0
 
     def function(self, x, y):
         return 0
@@ -61,26 +57,20 @@ class function_polynomial(object):
     def init(self, parameters):
         self.parameters = parameters.split(':')
 
-        if len(self.parameters) < 1:
+        if len(self.parameters) < 2:
             print('ERR: parameters of polynomial function not fitting')
-            return 0
+            return 2
 
         try:
             self.order = int(self.parameters[0])
         except ValueError as verr:
             print('ERR: polynomial order not correct:', end=' ')
             print(verr)
-            return 0
-        except Exception as ex:
-            print(
-                'ERR: an error occured while processing thei order:', end=' '
-            )
-            print(ex)
-            return 0
+            return 3
 
         if len(self.parameters) != self.order+2:
             print('ERR: polynomial number of parameters not correct')
-            return 0
+            return 4
 
         self.par_float = []
 
@@ -94,18 +84,10 @@ class function_polynomial(object):
                 end=' '
             )
             print(verr)
-            return 0
-        except Exception as ex:
-            print(
-                'ERR: an error occured while converting the'
-                'parameters:',
-                end=' '
-            )
-            print(ex)
-            return 0
+            return 5
 
         self.active = True
-        return 1
+        return 0
 
     def get_value(self, x, y):
         if not self.active:
@@ -272,7 +254,7 @@ class function_quadratic_moving_average(function_generic):
 # -----------------------------------------------------
 
 
-class function_generator:
+class function_generator(object):
     skip = True
 
     def __init__(self, function, parameters):
@@ -306,13 +288,13 @@ class function_generator:
         elif function == 'quadratic':
             self.function = function_quadratic_moving_average()
         else:
-            print('ERR: unknown function:', self.function)
-            return 0
-        if not self.function.init(parameters):
+            print('ERR: unknown function:', function)
+            return 1
+        if 0 != self.function.init(parameters):
             print('ERR: function initialisation')
-            return 0
+            return 2
         self.skip = False
-        return 1
+        return 0
 
     def get_function_value(self, x, y):
         if not self.skip:
