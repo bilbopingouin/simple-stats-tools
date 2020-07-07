@@ -207,7 +207,7 @@ class function_identity(function_generic):
         self.function_name = 'Identity'
 
     def function(self, x, y):
-        return y
+        return x
 
 
 class function_window_average(function_generic):

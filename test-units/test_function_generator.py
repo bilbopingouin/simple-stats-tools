@@ -14,15 +14,203 @@ if not path:
 
 # local libs
 spec = importlib.util.spec_from_file_location(
-        'function_generator',
-        path+'/../python-libs/function_generator.py'
-    )
+    'function_generator',
+    path+'/../python-libs/function_generator.py'
+)
 function_generator = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(function_generator)
 
 ####################################
 # Tests
 ####################################
+
+
+def test_function_generator_polynomial():
+    # Order 1: 5+0.1*x
+    order = 1
+    a0 = 5
+    a1 = 0.1
+
+    F = function_generator.function_generator(
+        'polynomial', str(order)+':'+str(a1)+':'+str(a0))
+
+    expected_result = a0+a1*3
+    function_result = F.get_function_value(3, float('nan'))
+
+    assert expected_result == function_result
+
+    # Order 2: 1-2x+x^2
+    order = 2
+    a0 = 1
+    a1 = -2
+    a2 = 1
+
+    F = function_generator.function_generator(
+        'polynomial', str(order)+':'+str(a2)+':'+str(a1)+':'+str(a0))
+
+    expected_result = 0
+    function_result = F.get_function_value(1, float('nan'))
+
+    assert expected_result == function_result
+
+    function_result = F.get_function_value(2, float('nan'))
+
+    assert expected_result != function_result
+
+
+def test_function_generator_sine():
+    amplitude = 5
+    frequence = 0.1
+    offset = 0.5
+
+    F = function_generator.function_generator(
+        'sine', str(amplitude)+':'+str(frequence)+':'+str(offset))
+
+    expected_result = (amplitude*math.sin(2*math.pi*frequence*(4-offset)))
+    function_result = F.get_function_value(4, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_exponential():
+    amplitude = 10
+    factor = 0.2
+
+    F = function_generator.function_generator(
+        'exponential', str(amplitude)+':'+str(factor))
+
+    expected_result = amplitude*math.exp(-factor*5)
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_gauss():
+    amplitude = 10
+    sigma = 10
+    offset = 50
+
+    F = function_generator.function_generator(
+        'gauss', str(amplitude)+':'+str(sigma)+':'+str(offset))
+
+    expected_result = amplitude*math.exp(-(5-offset)*(5-offset)/(sigma*sigma))
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_poisson():
+    amplitude = 10
+    lambda_parameter = 4
+
+    F = function_generator.function_generator(
+        'poisson', str(amplitude)+':'+str(lambda_parameter))
+
+    expected_result = amplitude * \
+        math.exp(-lambda_parameter)*(lambda_parameter**(5))/(math.factorial(5))
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_log():
+    amplitude = 10
+    offset = 4
+
+    F = function_generator.function_generator(
+        'log', str(amplitude)+':'+str(offset))
+
+    expected_result = amplitude*math.log(offset+5)
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_sqrt():
+    amplitude = 10
+    offset = 4
+
+    F = function_generator.function_generator(
+        'sqrt', str(amplitude)+':'+str(offset))
+
+    expected_result = amplitude*math.sqrt(offset+5)
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_inverse():
+    amplitude = 10
+    offset = 4
+
+    F = function_generator.function_generator(
+        'inverse', str(amplitude)+':'+str(offset))
+
+    expected_result = amplitude/(offset+5)
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_identity():
+    F = function_generator.function_generator('identity', 'nan')
+
+    expected_result = 5
+    function_result = F.get_function_value(5, float('nan'))
+
+    assert expected_result == function_result
+
+
+def test_function_generator_window():
+    window_size = 6
+
+    F = function_generator.function_generator('window', str(window_size))
+
+    expected_result = 0
+    for n in range(window_size):
+        expected_result += n*n
+        function_result = F.get_function_value(float('nan'), n*n)
+
+    expected_result /= window_size
+
+    assert expected_result == function_result
+
+
+def test_function_generator_cumulative():
+    F = function_generator.function_generator('cumulative', 'nan')
+
+    expected_result = 0
+    for n in range(5):
+        function_result = F.get_function_value(float('nan'), n*n)
+        expected_result = (n*expected_result+n*n)/(n+1)
+
+    assert expected_result == function_result
+
+
+def test_function_generator_factored():
+    factor = 6
+
+    F = function_generator.function_generator('factored', str(factor))
+
+    expected_result = 0
+    for n in range(5):
+        function_result = F.get_function_value(float('nan'), n*n)
+        expected_result = (factor*expected_result+n*n)/(factor+1)
+
+    assert expected_result == function_result
+
+
+def test_function_generator_quadratic():
+    factor = 6
+
+    F = function_generator.function_generator('quadratic', str(factor))
+
+    expected_result = 0
+    for n in range(5):
+        function_result = F.get_function_value(float('nan'), n)
+        expected_result = (factor*expected_result+n*n)/(factor+n)
+
+    assert expected_result == function_result
 
 
 def test_functions_generations():
