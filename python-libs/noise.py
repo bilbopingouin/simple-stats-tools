@@ -62,7 +62,7 @@ class noise:
         elif self.relative_absolute == 'sqrt':
             self.max = self.noise_parameter*math.sqrt(y)
         else:
-            print('ERR: paramter type not known')
+            print('ERR: parameter type not known')
             return float('nan')
 
         return self.noise_generator.get_value(y, self.max)
